@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-Blockchain Integration Platform</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/web3@1.8.0/dist/web3.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <h1>AI-Chain</h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#model-verification">Model Verification</a></li>
+                    <li><a href="#data-provenance">Data Provenance</a></li>
+                    <li><a href="#governance">Governance</a></li>
+                    <li><a href="#about">About</a></li>
+                </ul>
+            </nav>
+            <div class="wallet-status">
+                <button id="connect-wallet">Connect Wallet</button>
+                <div id="wallet-address" class="hidden"></div>
+            </div>
+        </div>
+    </header>
+
+    <section id="home" class="hero">
+        <div class="container">
+            <h1>Transparent AI Verification through Blockchain</h1>
+            <p>Our platform ensures model integrity, data provenance, and transparent governance using blockchain technology.</p>
+            <button class="btn primary" id="get-started">Get Started</button>
+        </div>
+    </section>
+
+    <section id="model-verification" class="section">
+        <div class="container">
+            <h2>AI Model Verification</h2>
+            <div class="verification-interface">
+                <div class="upload-model">
+                    <h3>Verify Model Integrity</h3>
+                    <div class="upload-container">
+                        <input type="file" id="model-file" accept=".h5,.pb,.pt,.onnx">
+                        <label for="model-file">Select Model File</label>
+                    </div>
+                    <div class="model-info">
+                        <div class="info-item">
+                            <span>Model Name:</span>
+                            <input type="text" id="model-name" placeholder="Enter model name">
+                        </div>
+                        <div class="info-item">
+                            <span>Version:</span>
+                            <input type="text" id="model-version" placeholder="e.g., 1.0.0">
+                        </div>
+                        <div class="info-item">
+                            <span>Description:</span>
+                            <textarea id="model-description" placeholder="Brief description of the model"></textarea>
+                        </div>
+                    </div>
+                    <button id="verify-model" class="btn primary">Verify & Register on Blockchain</button>
+                </div>
+                <div class="verification-results">
+                    <h3>Verification Results</h3>
+                    <div id="verification-status" class="status pending">Waiting for model...</div>
+                    <div class="results-container">
+                        <div id="model-hash" class="result-item">
+                            <span>Model Hash:</span>
+                            <p>-</p>
+                        </div>
+                        <div id="blockchain-timestamp" class="result-item">
+                            <span>Timestamp:</span>
+                            <p>-</p>
+                        </div>
+                        <div id="transaction-id" class="result-item">
+                            <span>Transaction ID:</span>
+                            <p>-</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="data-provenance" class="section">
+        <div class="container">
+            <h2>Data Provenance</h2>
+            <div class="provenance-tracker">
+                <div class="data-sources">
+                    <h3>Track Data Sources</h3>
+                    <div class="source-form">
+                        <div class="form-group">
+                            <label for="dataset-name">Dataset Name</label>
+                            <input type="text" id="dataset-name" placeholder="Enter dataset name">
+                        </div>
+                        <div class="form-group">
+                            <label for="dataset-source">Source</label>
+                            <input type="text" id="dataset-source" placeholder="Source location or organization">
+                        </div>
+                        <div class="form-group">
+                            <label for="dataset-license">License</label>
+                            <select id="dataset-license">
+                                <option value="">Select License</option>
+                                <option value="cc-by">CC BY</option>
+                                <option value="cc-by-sa">CC BY-SA</option>
+                                <option value="cc-by-nc">CC BY-NC</option>
+                                <option value="mit">MIT</option>
+                                <option value="apache">Apache 2.0</option>
+                                <option value="custom">Custom</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="data-hash">Data Hash (or upload file to generate)</label>
+                            <div class="hash-control">
+                                <input type="text" id="data-hash" placeholder="Enter SHA-256 hash">
+                                <span>or</span>
+                                <input type="file" id="data-file">
+                                <label for="data-file">Upload Sample</label>
+                            </div>
+                        </div>
+                        <button id="register-data" class="btn secondary">Register Data Provenance</button>
+                    </div>
+                </div>
+                <div class="provenance-history">
+                    <h3>Provenance History</h3>
+                    <div class="history-filter">
+                        <input type="text" placeholder="Search by hash, name, or source" id="search-provenance">
+                    </div>
+                    <div class="history-list" id="provenance-list">
+                        <p class="empty-state">No data provenance records yet. Register data sources to see them here.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="governance" class="section">
+        <div class="container">
+            <h2>Model Governance</h2>
+            <div class="governance-dashboard">
+                <div class="models-list">
+                    <h3>Registered Models</h3>
+                    <div class="list-controls">
+                        <input type="text" placeholder="Search models" id="search-models">
+                        <select id="filter-models">
+                            <option value="all">All Models</option>
+                            <option value="verified">Verified</option>
+                            <option value="pending">Pending</option>
+                        </select>
+                    </div>
+                    <div class="models-container" id="models-container">
+                        <p class="empty-state">No models registered. Verify your first model to see it here.</p>
+                    </div>
+                </div>
+                <div class="governance-controls">
+                    <h3>Governance Actions</h3>
+                    <div class="action-card">
+                        <h4>Model Permission Management</h4>
+                        <p>Set access control for who can use, modify or distribute models.</p>
+                        <button class="btn tertiary" id="manage-permissions">Manage Permissions</button>
+                    </div>
+                    <div class="action-card">
+                        <h4>Audit Trail</h4>
+                        <p>Review all changes and access events for registered models.</p>
+                        <button class="btn tertiary" id="view-audit">View Audit Logs</button>
+                    </div>
+                    <div class="action-card">
+                        <h4>Compliance Reporting</h4>
+                        <p>Generate reports for regulatory compliance.</p>
+                        <button class="btn tertiary" id="generate-report">Generate Report</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="about" class="section">
+        <div class="container">
+            <h2>About the Platform</h2>
+            <div class="about-content">
+                <div class="about-text">
+                    <h3>Our Mission</h3>
+                    <p>We're building a transparent ecosystem for AI development through blockchain verification. Our platform ensures that AI models are trustworthy, their training data is ethically sourced, and their governance is transparent.</p>
+                    
+                    <h3>How It Works</h3>
+                    <p>The platform uses blockchain to create immutable records of model hashes, data provenance, and access permissions. Smart contracts enforce governance rules and provide automatic audit trails for all interactions.</p>
+                </div>
+                <div class="tech-stack">
+                    <h3>Technology Stack</h3>
+                    <div class="tech-icons">
+                        <div class="tech-item">
+                            <span class="icon">🔗</span>
+                            <span class="label">Ethereum</span>
+                        </div>
+                        <div class="tech-item">
+                            <span class="icon">🤖</span>
+                            <span class="label">ML/AI</span>
+                        </div>
+                        <div class="tech-item">
+                            <span class="icon">📊</span>
+                            <span class="label">Data Analytics</span>
+                        </div>
+                        <div class="tech-item">
+                            <span class="icon">🔐</span>
+                            <span class="label">Cryptography</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <h2>AI-Chain</h2>
+                    <p>Blockchain-powered AI verification platform</p>
+                </div>
+                <div class="footer-links">
+                    <div class="link-group">
+                        <h3>Platform</h3>
+                        <ul>
+                            <li><a href="#model-verification">Model Verification</a></li>
+                            <li><a href="#data-provenance">Data Provenance</a></li>
+                            <li><a href="#governance">Governance</a></li>
+                        </ul>
+                    </div>
+                    <div class="link-group">
+                        <h3>Resources</h3>
+                        <ul>
+                            <li><a href="#">Documentation</a></li>
+                            <li><a href="#">API Reference</a></li>
+                            <li><a href="#">Smart Contracts</a></li>
+                        </ul>
+                    </div>
+                    <div class="link-group">
+                        <h3>Company</h3>
+                        <ul>
+                            <li><a href="#">About Us</a></li>
+                            <li><a href="#">Contact</a></li>
+                            <li><a href="#">Privacy Policy</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2023 AI-Chain. All rights reserved.</p>
+                <div class="footer-social">
+                    <a href="#" class="social-icon">GitHub</a>
+                    <a href="#" class="social-icon">Twitter</a>
+                    <a href="#" class="social-icon">Discord</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <div id="modal-container" class="modal-hidden">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="modal-title">Modal Title</h3>
+                <button id="close-modal">&times;</button>
+            </div>
+            <div class="modal-content" id="modal-content">
+                <!-- Modal content will be dynamically inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script src="smart-contract.js"></script>
+</body>
+</html>
+
